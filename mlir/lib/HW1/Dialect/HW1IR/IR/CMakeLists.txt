@@ -7,7 +7,7 @@ add_mlir_dialect_library(
 
   DEPENDS
   MLIRHW1IRIncGen
-#   MLIRHW1IROpInterfacesIncGen
+  MLIRHW1IROpInterfacesIncGen
   MLIRLinalgDialect
 
   LINK_LIBS PUBLIC
@@ -15,7 +15,7 @@ add_mlir_dialect_library(
 
   DEPENDS
   MLIRHW1IRIncGen
-#   MLIRHW1IROpInterfacesIncGen
+  MLIRHW1IROpInterfacesIncGen
   MLIRLinalgDialect
 
   LINK_LIBS PUBLIC
