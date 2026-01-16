@@ -10,7 +10,7 @@ def hw1ir_Dialect : Dialect {
   let description = [{
     The `hw1ir` dialect is test IR. 
   }];
-  let useDefaultPrinterParser = 1;
+  // let useDefaultPrinterParser = 1;
 }
 
 def hw1ir_AnyScalarOrTensor : TypeConstraint<Or<[AnySignlessInteger.predicate,

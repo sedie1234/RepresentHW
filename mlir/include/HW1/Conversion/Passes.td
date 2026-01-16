@@ -10,3 +10,5 @@ def LinalgToHW1 : Pass<"linalg-to-hw1", "ModuleOp">{
         This pass converts Linalg operations to HW1IR dialect operations.
     }];
 }
+
+#endif // HW1IR_CONVERSION_PASSES

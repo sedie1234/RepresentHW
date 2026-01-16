@@ -1,7 +1,7 @@
 #ifndef CONVERT_TO_HW1IR_H
 #define CONVERT_TO_HW1IR_H
 
-#include "HW1/Conversion/PassDetail.h"
+// #include "HW1/Conversion/PassDetail.h"
 
 #include "mlir/Pass/Pass.h"
 #include <memory>

@@ -4,9 +4,9 @@
 include "mlir/IR/OpBase.td"
 include "HW1/Dialect/HW1IR/HW1IROpBase.td"
 include "mlir/IR/SymbolInterfaces.td"
-include "mlir/IR/SideEffectInterfaces.td"
+include "mlir/Interfaces/SideEffectInterfaces.td"
 include "mlir/Interfaces/ControlFlowInterfaces.td"
-include "mlir/IR/AffineMap.td"
+// include "mlir/IR/AffineMap.td"
 
 // base operation
 class hw1ir_Op<string mnemonic, list<Trait> traits = []> :
@@ -28,7 +28,7 @@ def hw1ir_MatmulOp : hw1ir_Op<"matmul", [Pure]>{
     );
     let results = (outs AnyTypeOf<[AnyMemRef, AnyTensor]>:$C);
     let assemblyFormat = [{
-        $lhs `,` $rhs `into` $output attr-dict `:` type($lhs) `,` type($rhs) `->` type($output)
+        $A `,` $B attr-dict `:` type($A) `,` type($B) `->` type($C)
     }];
     // let extraClassDeclaration = [{
     //     float getBasePower() { return 25.0f; }
@@ -48,7 +48,7 @@ def hw1ir_ReluOp : hw1ir_Op<"relu", [Pure]>{
     );
     let results = (outs AnyTypeOf<[AnyMemRef, AnyTensor]>:$output);
     let assemblyFormat = [{
-        $input `into` $output attr-dict `:` type($input) `->` type($output)
+        $input attr-dict `:` type($input) `->` type($output)
     }];
 }
 
