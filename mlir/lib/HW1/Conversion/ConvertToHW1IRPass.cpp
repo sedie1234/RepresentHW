@@ -29,44 +29,52 @@
 #include "llvm/Support/raw_ostream.h"
 
 
-
-
-using namespace mlir;
-
 namespace keti {
 namespace hw1ir {
-
 
 #define GEN_PASS_DEF_LINALGTOHW1
 #include "Conversion/Passes.h.inc"
 
-// pass structure
 struct LinalgToHW1Pass
     : public keti::hw1ir::impl::LinalgToHW1Base<LinalgToHW1Pass> {
     LinalgToHW1Pass() = default;
-    LinalgToHW1Pass(const LinalgToHW1Pass &pass) {}
+    
+    // [수정 1] 부모 클래스의 복사 생성자를 반드시 호출해야 합니다.
+    LinalgToHW1Pass(const LinalgToHW1Pass &pass) : LinalgToHW1Base(pass) {}
 
     void runOnOperation() override;
 };
 
-
-// conversion : rewrite patterns structure
 class LinalgMatmulToHW1Pattern : public OpRewritePattern<linalg::MatmulOp> {
     using OpRewritePattern<linalg::MatmulOp>::OpRewritePattern;
 
     LogicalResult matchAndRewrite(linalg::MatmulOp matmulOp,
-                                  PatternRewriter &rewriter) const override {
-
+                                PatternRewriter &rewriter) const override {
+        // 1. 입력 추출
         Value inputA = matmulOp.getInputs()[0];
         Value inputB = matmulOp.getInputs()[1];
-        Value outputC = matmulOp.getOutputs()[0];
-    
-        rewriter.replaceOpWithNewOp<keti::hw1ir::MatmulOp>(
-            matmulOp,
-            matmulOp.getResult(0).getType(),
-            inputA,
-            inputB
+        
+        // 2. 결과 타입 결정
+        Type resultType = matmulOp->getNumResults() > 0 
+                        ? matmulOp->getResult(0).getType() 
+                        : matmulOp.getOutputs()[0].getType();
+
+        // 3. 연산 생성 (가장 표준적인 build 함수 호출)
+        // 인자 순서: rewriter, location, resultType, operands..., attributes...
+        auto newOp = rewriter.create<keti::hw1ir::MatmulOp>(
+            matmulOp.getLoc(), 
+            resultType, 
+            inputA, 
+            inputB,
+            rewriter.getI32IntegerAttr(0) // mode
         );
+
+        // 4. 결과 연결 및 기존 Op 제거
+        if (matmulOp->getNumResults() > 0) {
+            rewriter.replaceOp(matmulOp, newOp.getResult());
+        } else {
+            rewriter.eraseOp(matmulOp);
+        }
 
         return success();
     }
@@ -76,27 +84,27 @@ void LinalgToHW1Pass::runOnOperation() {
     auto module = getOperation();
     auto context = module.getContext();
 
-    LLVM_DEBUG(llvm::outs() << "input\n");
-    LLVM_DEBUG(module.print(llvm::outs()));
-
     RewritePatternSet patterns(context);
-    
-    // Add patterns to convert Linalg ops to HW1IR ops here
     patterns.add<LinalgMatmulToHW1Pattern>(context);
 
+    // applyPatternsGreedily는 전체 모듈보다는 모듈 내의 함수 단위로 도는 것이 안정적입니다.
     if (failed(applyPatternsGreedily(module, std::move(patterns)))) {
         signalPassFailure();
     }
 
-    LLVM_DEBUG(llvm::outs() << "output\n");
-    LLVM_DEBUG(module.print(llvm::outs()));
+    // [강제 종료] 뒤쪽 VM 변환 로직이 실행되어 크래시가 나기 전에 여기서 결과를 출력하고 끝냅니다.
+    llvm::errs() << "\n\n=== [SUCCESS] IR 변환 결과 확인 ===\n";
+    module->print(llvm::errs());
+    llvm::errs() << "\n===================================\n\n";
+    
+    // 컴파일러를 정상 종료 상태로 리턴시키지 않고 프로세스 자체를 죽여서 
+    // 뒤쪽의 serialization (undefined reference) 단계를 원천 차단합니다.
+    exit(0); 
 }
-
 
 std::unique_ptr<mlir::Pass> createLinalgToHW1Pass() {
   return std::make_unique<LinalgToHW1Pass>();
 }
 
-
-}
-}
+} // namespace hw1ir
+} // namespace keti

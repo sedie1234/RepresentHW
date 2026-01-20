@@ -30,3 +30,10 @@ void hw1ir::hw1irDialect::initialize() {
 }
 
 } // namespace keti
+
+
+#define GET_OP_CLASSES
+#include "Dialect/HW1IR/HW1IR.cpp.inc"
+
+#define GET_OP_INTERFACE_DEFS
+#include "Dialect/HW1IR/HW1IRInterface.cpp.inc"

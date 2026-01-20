@@ -14,28 +14,23 @@ class hw1ir_Op<string mnemonic, list<Trait> traits = []> :
 
 
 // operation definitions
+
+
 def hw1ir_MatmulOp : hw1ir_Op<"matmul", [Pure]>{
     let summary = "Matrix Multiplication Operation";
-    let description = [{
-        This operation performs matrix multiplication of two input matrices A and B,
-        It is just for test.
-    }];
     let arguments = (ins
         AnyTypeOf<[AnyMemRef, AnyTensor]>:$A,
         AnyTypeOf<[AnyMemRef, AnyTensor]>:$B,
-        
         DefaultValuedAttr<I32Attr, "0">:$mode
     );
+    // 결과를 다시 1개로 정의합니다 (Tensor 모드 대응)
     let results = (outs AnyTypeOf<[AnyMemRef, AnyTensor]>:$C);
+    
     let assemblyFormat = [{
         $A `,` $B attr-dict `:` type($A) `,` type($B) `->` type($C)
     }];
-    // let extraClassDeclaration = [{
-    //     float getBasePower() { return 25.0f; }
-    //     ::mlir::Value getSrcMemref() { return getLhs(); }
-    //     ::mlir::Value getDstMemref() { return getOutput(); }
-    // }];
-}   
+}
+ 
 
 def hw1ir_ReluOp : hw1ir_Op<"relu", [Pure]>{
     let summary = "ReLU Activation Operation";
