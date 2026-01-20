@@ -42,12 +42,18 @@ public:
 } // namespace hw1ir
 } // namespace keti
 
-#include "HW1/Dialect/HW1IR/HW1IRDialect.h.inc"
-#include "HW1/Dialect/HW1IR/HW1IREnums.h.inc"
-#include "HW1/Dialect/HW1IR/HW1IROpInterfaces.h.inc"
+// #include "HW1/Dialect/HW1IR/HW1IRDialect.h.inc"
+// #include "HW1/Dialect/HW1IR/HW1IREnums.h.inc"
+// #include "HW1/Dialect/HW1IR/HW1IROpInterfaces.h.inc"
+
+#include "Dialect/HW1IR/HW1IRDialect.h.inc"
+#include "Dialect/HW1IR/HW1IREnums.h.inc"
+#include "Dialect/HW1IR/HW1IRInterface.h.inc"
 
 // include TableGen generated Op definitions
 #define GET_OP_CLASSES
-#include "HW1/Dialect/HW1IR/HW1IR.h.inc"
+// #include "HW1/Dialect/HW1IR/HW1IROps.h.inc"
+
+#include "Dialect/HW1IR/HW1IROps.h.inc"
 
 #endif

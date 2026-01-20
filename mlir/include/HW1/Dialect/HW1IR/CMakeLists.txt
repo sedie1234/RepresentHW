@@ -1,13 +1,27 @@
-add_mlir_dialect(HW1 hw1)
-add_mlir_doc(HW1 HW1Dialect ./ -gen-dialect-doc)
+add_mlir_dialect(HW1IR hw1ir)
+add_mlir_doc(HW1IR HW1Dialect ./ -gen-dialect-doc)
 
 set(LLVM_TARGET_DEFINITIONS HW1OpBase.td)
 mlir_tablegen(HW1OpInterfaces.h.inc -gen-op-interface-decls)
 mlir_tablegen(HW1OpInterfaces.cpp.inc -gen-op-interface-defs)
-mlir_tablegen(HW1Enums.h.inc -gen-enum-decls)
-mlir_tablegen(HW1Enums.cpp.inc -gen-enum-defs)
+mlir_tablegen(HW1IREnums.h.inc -gen-enum-decls)
+mlir_tablegen(HW1IREnums.cpp.inc -gen-enum-defs)
 add_public_tablegen_target(MLIRHW1OpInterfacesIncGen)
 add_dependencies(hw1-headers MLIRHW1OpInterfacesIncGen)
+
+set(LLVM_TARGET_DEFINITIONS HW1Dialect.td)
+mlir_tablegen(HW1IRDialect.h.inc -gen-dialect-decls)
+mlir_tablegen(HW1IRDialect.cpp.inc -gen-dialect-defs)
+add_public_tablegen_target(MLIRHW1IRDialectIncGen)
+add_dependencies(hw1-headers MLIRHW1IRDialectIncGen)
+
+set(LLVM_TARGET_DEFINITIONS HW1IR.td)
+mlir_tablegen(HW1IROps.h.inc -gen-op-decls)
+mlir_tablegen(HW1IROps.cpp.inc -gen-op-defs)
+add_public_tablegen_target(MLIRHW1IROpsIncGen)
+add_dependencies(hw1-headers MLIRHW1IROpsIncGen)
+
+
 # set(LLVM_TARGET_DEFINITIONS HW1TransformOps.td)
 # mlir_tablegen(HW1TransformOps.h.inc -gen-op-decls)
 # mlir_tablegen(HW1TransformOps.cpp.inc -gen-op-defs)

@@ -18,14 +18,14 @@
 
 using namespace mlir;
 
-#include "HW1/Dialect/HW1IR/HW1IRDialect.cpp.inc"
+#include "Dialect/HW1IR/HW1IRDialect.cpp.inc"
 
 namespace keti {
 
 void hw1ir::hw1irDialect::initialize() {
   addOperations<
 #define GET_OP_LIST
-#include "HW1/Dialect/HW1IR/HW1IR.cpp.inc"
+#include "Dialect/HW1IR/HW1IROps.cpp.inc"
       >();
 }
 

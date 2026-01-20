@@ -29,11 +29,16 @@
 #include "llvm/Support/raw_ostream.h"
 
 
+
+
 using namespace mlir;
 
 namespace keti {
 namespace hw1ir {
 
+
+#define GEN_PASS_DEF_LINALGTOHW1
+#include "Conversion/Passes.h.inc"
 
 // pass structure
 struct LinalgToHW1Pass
@@ -42,7 +47,7 @@ struct LinalgToHW1Pass
     LinalgToHW1Pass(const LinalgToHW1Pass &pass) {}
 
     void runOnOperation() override;
-}
+};
 
 
 // conversion : rewrite patterns structure
@@ -65,7 +70,7 @@ class LinalgMatmulToHW1Pattern : public OpRewritePattern<linalg::MatmulOp> {
 
         return success();
     }
-}
+};
 
 void LinalgToHW1Pass::runOnOperation() {
     auto module = getOperation();
@@ -86,6 +91,12 @@ void LinalgToHW1Pass::runOnOperation() {
     LLVM_DEBUG(llvm::outs() << "output\n");
     LLVM_DEBUG(module.print(llvm::outs()));
 }
+
+
+std::unique_ptr<mlir::Pass> createLinalgToHW1Pass() {
+  return std::make_unique<LinalgToHW1Pass>();
+}
+
 
 }
 }

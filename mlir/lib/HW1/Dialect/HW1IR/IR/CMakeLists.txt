@@ -6,17 +6,20 @@ add_mlir_dialect_library(
   ${PROJECT_SOURCE_DIR}/mlir/include/HW1/Dialect/HW1IR
 
   DEPENDS
-  MLIRHW1IRIncGen
-  MLIRHW1IROpInterfacesIncGen
+  MLIRHW1IROpsIncGen
+  MLIRHW1IRDialectIncGen
+  MLIRHW1OpInterfacesIncGen
   MLIRLinalgDialect
 
   LINK_LIBS PUBLIC
-  MLIRIR)
+  MLIRIR
+  MLIRSupport
+  MLIRDialect
+  
+  )
 
-  DEPENDS
-  MLIRHW1IRIncGen
-  MLIRHW1IROpInterfacesIncGen
-  MLIRLinalgDialect
-
-  LINK_LIBS PUBLIC
-  MLIRIR)
+  
+target_include_directories(HW1IRDialect PUBLIC
+  ${PROJECT_SOURCE_DIR}/mlir/include
+  ${PROJECT_BINARY_DIR}/mlir/include
+)
