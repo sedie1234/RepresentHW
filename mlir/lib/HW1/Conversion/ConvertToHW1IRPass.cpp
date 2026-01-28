@@ -84,6 +84,12 @@ void LinalgToHW1Pass::runOnOperation() {
     auto module = getOperation();
     auto context = module.getContext();
 
+    
+    llvm::errs() << "\n\n========== [Entry Module]  ==========\n";
+    module->print(llvm::errs());
+    llvm::errs() << "\n===================================\n\n";
+
+
     RewritePatternSet patterns(context);
     patterns.add<LinalgMatmulToHW1Pattern>(context);
 
