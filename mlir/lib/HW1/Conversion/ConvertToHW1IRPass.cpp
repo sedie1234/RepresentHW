@@ -105,7 +105,7 @@ void LinalgToHW1Pass::runOnOperation() {
     
     // 컴파일러를 정상 종료 상태로 리턴시키지 않고 프로세스 자체를 죽여서 
     // 뒤쪽의 serialization (undefined reference) 단계를 원천 차단합니다.
-    exit(0); 
+    // exit(0); 
 }
 
 std::unique_ptr<mlir::Pass> createLinalgToHW1Pass() {
